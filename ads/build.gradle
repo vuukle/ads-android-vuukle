@@ -50,8 +50,8 @@ afterEvaluate {
             release(MavenPublication) {
                 from components.release
 
-                groupId = 'com.vuukle'
-                artifactId = 'ads-android-vuukle'
+                groupId = 'com.github.vuukle'
+                artifactId = 'ads-android'
                 version = '1.0.1'
             }
         }
