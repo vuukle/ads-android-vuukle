@@ -1,6 +1,7 @@
 package com.vuukle.ads.view.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.vuukle.ads.R
@@ -46,7 +47,7 @@ class BannerActivity : AppCompatActivity() {
         // Handling errors
         vuukleAds.addErrorListener(object : VuukleAdsErrorCallback {
             override fun onError(error: VuukleAdsException) {
-
+                Log.i("ewfwefwe--->>", error.toString())
             }
         })
         // start advertisement

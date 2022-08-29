@@ -12,7 +12,9 @@ import org.prebid.mobile.ResultCode
 import vuukle.sdk.ads.callback.VuukleAdsErrorCallback
 import vuukle.sdk.ads.callback.VuukleAdsResultCallback
 import vuukle.sdk.ads.exception.VuukleAdLoadFail
+import vuukle.sdk.ads.exception.VuukleAdsException
 import vuukle.sdk.ads.exception.VuukleAdsInitializationException
+import vuukle.sdk.ads.exception.VuukleLoadAdError
 import vuukle.sdk.ads.manager.VuukleAds
 import vuukle.sdk.ads.model.AdItem
 import vuukle.sdk.ads.prebid.PrebidWrapper
@@ -37,6 +39,7 @@ class VuukleAdsImpl : VuukleAds {
         override fun onResume(owner: LifecycleOwner) {
             handleResume()
             super.onResume(owner)
+            Log.i("vuukle_ads_log", "MEMORY LEAK STEP ... ${ads.size}")
         }
 
         override fun onPause(owner: LifecycleOwner) {
@@ -47,6 +50,22 @@ class VuukleAdsImpl : VuukleAds {
         override fun onDestroy(owner: LifecycleOwner) {
             handleDestroy()
             super.onDestroy(owner)
+        }
+    }
+
+
+    // Ad listener
+    private var adListener: AdListener? = object : AdListener() {
+        override fun onAdFailedToLoad(loadError: LoadAdError) {
+            super.onAdFailedToLoad(loadError)
+            val errorString = loadError.toString()
+            notifyError(VuukleLoadAdError(errorString))
+        }
+    }
+
+    private fun notifyError(vuukleAdsException: VuukleAdsException) {
+        if (this::vuukleAdsErrorCallback.isInitialized) {
+            vuukleAdsErrorCallback.onError(vuukleAdsException)
         }
     }
 
@@ -66,8 +85,7 @@ class VuukleAdsImpl : VuukleAds {
      *  todo
      */
     private fun configureAds(activityContext: Context) {
-        val configuration =
-            RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("B8A6F850FDA9B5DEB30F01B2F07971EA")).build()
+        val configuration = RequestConfiguration.Builder().build()
 
         MobileAds.setRequestConfiguration(configuration)
         // Initialize the Mobile Ads SDK with an AdMob App ID.
@@ -104,14 +122,14 @@ class VuukleAdsImpl : VuukleAds {
             .Builder()
         adUnit.fetchDemand(builder) {
             if (it != ResultCode.SUCCESS) {
-                Log.i("testing--->>>", "fetchDemand error ${it.name}")
-                if (this::vuukleAdsErrorCallback.isInitialized) {
-                    vuukleAdsErrorCallback.onError(VuukleAdLoadFail(it.toString()))
-                }
+                Log.i("vuukle_ads_log", "fetchDemand error ${it.name}")
+                notifyError(VuukleAdLoadFail(it.toString()))
             } else {
                 val request = builder.build()
+                // set adListener
+                adListener?.let { listener -> adView.adListener = listener }
                 adView.loadAd(request)
-                Log.i("testing--->>>", "fetchDemand success")
+                Log.i("vuukle_ads_log", "fetchDemand success")
                 if (this::vuukleAdsResultCallback.isInitialized) {
                     vuukleAdsResultCallback.onDemandFetched(id)
                 }
@@ -126,7 +144,7 @@ class VuukleAdsImpl : VuukleAds {
         try {
             ads.forEach {
                 it.value.adView.resume()
-                //it.value.adUnit.resumeAutoRefresh()
+                it.value.adUnit.resumeAutoRefresh()
                 Log.i("vuukle_ads_log", "onResume")
             }
         } catch (e: Throwable) {
@@ -142,7 +160,7 @@ class VuukleAdsImpl : VuukleAds {
         try {
             ads.forEach {
                 it.value.adView.pause()
-                //it.value.adUnit.stopAutoRefresh()
+                it.value.adUnit.stopAutoRefresh()
                 Log.i("vuukle_ads_log", "onPause")
             }
         } catch (e: Throwable) {
@@ -158,11 +176,14 @@ class VuukleAdsImpl : VuukleAds {
         try {
             ads.forEach {
                 it.value.adView.destroy()
-                //it.value.adUnit.stopAutoRefresh()
+                it.value.adUnit.stopAutoRefresh()
+                Log.i("vuukle_ads_log", "destroy")
             }
         } catch (e: Throwable) {
             //TODO
             e.printStackTrace()
+        } finally {
+            adListener = null
         }
     }
 
@@ -191,7 +212,7 @@ class VuukleAdsImpl : VuukleAds {
             adView.getVuukleAdSize().height()
         )
         ads[adId] = AdItem(adView.getAdView() as AdView, bannerAdUnit)
-        Log.i("testing--->>>", "Banner is created: $adId")
+        Log.i("vuukle_ads_log", "Banner is created: $adId")
         return Result.success(adId)
     }
 }
