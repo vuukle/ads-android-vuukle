@@ -9,10 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_centerInParent="true"
-        android:layout_marginHorizontal="100dp"
-        android:layout_marginVertical="20dp"
-        app:cardCornerRadius="30dp"
-        app:cardElevation="8dp">
+        android:layout_margin="7dp"
+        android:layout_marginHorizontal="10dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="2dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -20,12 +20,15 @@
 
             <TextView
                 android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"
+                android:textAlignment="center"
+                android:padding="5dp"
+                android:gravity="center"
                 android:textColor="@color/purple_500"
+                android:textSize="20dp"
                 android:textStyle="bold"
-                android:textSize="25dp"
                 tools:text="Banner" />
 
         </RelativeLayout>
