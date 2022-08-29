@@ -34,6 +34,26 @@ class VuukleAdView(context: Context, attributeSet: AttributeSet) :
                     name = VuukleAdSize.Type.BANNER
                 )
             }
+            VuukleAdSize.Type.MEDIUM_RECTANGLE -> {
+                VuukleAdSize(
+                    name = VuukleAdSize.Type.MEDIUM_RECTANGLE
+                )
+            }
+            VuukleAdSize.Type.FULL_BANNER -> {
+                VuukleAdSize(
+                    name = VuukleAdSize.Type.FULL_BANNER
+                )
+            }
+            VuukleAdSize.Type.FLUID -> {
+                VuukleAdSize(
+                    name = VuukleAdSize.Type.FLUID
+                )
+            }
+            VuukleAdSize.Type.LARGE_BANNER -> {
+                VuukleAdSize(
+                    name = VuukleAdSize.Type.LARGE_BANNER
+                )
+            }
             else -> {
                 VuukleAdSize(
                     name = VuukleAdSize.Type.INVALID

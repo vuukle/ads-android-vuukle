@@ -2,15 +2,17 @@ package vuukle.sdk.ads.manager.impl
 
 import android.content.Context
 import android.util.Log
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.RequestConfiguration
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import com.google.android.gms.ads.*
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import org.prebid.mobile.AdUnit
 import org.prebid.mobile.ResultCode
 import vuukle.sdk.ads.callback.VuukleAdsErrorCallback
 import vuukle.sdk.ads.callback.VuukleAdsResultCallback
 import vuukle.sdk.ads.exception.VuukleAdLoadFail
+import vuukle.sdk.ads.exception.VuukleAdsInitializationException
 import vuukle.sdk.ads.manager.VuukleAds
 import vuukle.sdk.ads.model.AdItem
 import vuukle.sdk.ads.prebid.PrebidWrapper
@@ -19,6 +21,7 @@ import vuukle.sdk.ads.widget.VuukleAdView
 import java.util.*
 
 class VuukleAdsImpl : VuukleAds {
+
     private lateinit var provider: VuukleAdsProvider
     private lateinit var prebidWrapper: PrebidWrapper
 
@@ -29,29 +32,62 @@ class VuukleAdsImpl : VuukleAds {
     private lateinit var vuukleAdsErrorCallback: VuukleAdsErrorCallback
     private lateinit var vuukleAdsResultCallback: VuukleAdsResultCallback
 
+    // observer
+    private val lifecycleObserver = object : DefaultLifecycleObserver {
+        override fun onResume(owner: LifecycleOwner) {
+            handleResume()
+            super.onResume(owner)
+        }
+
+        override fun onPause(owner: LifecycleOwner) {
+            handlePause()
+            super.onPause(owner)
+        }
+
+        override fun onDestroy(owner: LifecycleOwner) {
+            handleDestroy()
+            super.onDestroy(owner)
+        }
+    }
+
     override fun initialize(
         applicationContext: Context
     ): Result<Boolean> {
+        if (applicationContext !is AppCompatActivity) {
+            throw VuukleAdsInitializationException("We are supporting only Activity for now. Please call `initialize()` function from Activity.")
+        }
         doInitialize(applicationContext)
         configureAds(applicationContext)
+        (applicationContext as LifecycleOwner).lifecycle.addObserver(lifecycleObserver)
         return Result.success(true)
     }
 
-    private fun configureAds(applicationContext: Context) {
-        val configuration = RequestConfiguration.Builder().build()
+    /**
+     *  todo
+     */
+    private fun configureAds(activityContext: Context) {
+        val configuration =
+            RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("B8A6F850FDA9B5DEB30F01B2F07971EA")).build()
+
         MobileAds.setRequestConfiguration(configuration)
         // Initialize the Mobile Ads SDK with an AdMob App ID.
-        MobileAds.initialize(applicationContext) {
+        MobileAds.initialize(activityContext) {
             // TODO logging
         }
-        prebidWrapper.initializeHost(applicationContext)
+        prebidWrapper.initializeHost(activityContext)
     }
 
-    private fun doInitialize(applicationContext: Context) {
-        provider = VuukleAdsProvider(applicationContext)
+    /**
+     *  todo
+     */
+    private fun doInitialize(activityContext: Context) {
+        provider = VuukleAdsProvider(activityContext)
         prebidWrapper = PrebidWrapper()
     }
 
+    /**
+     *  todo
+     */
     override fun startAdvertisement() {
         ads.forEach {
             val adView = it.value.adView
@@ -60,6 +96,9 @@ class VuukleAdsImpl : VuukleAds {
         }
     }
 
+    /**
+     *  todo
+     */
     private fun loadAd(id: String, adView: AdView, adUnit: AdUnit) {
         val builder = AdManagerAdRequest
             .Builder()
@@ -80,32 +119,70 @@ class VuukleAdsImpl : VuukleAds {
         }
     }
 
-    override fun resume() {
-        ads.forEach {
-            it.value.adView.resume()
+    /**
+     *  todo
+     */
+    private fun handleResume() {
+        try {
+            ads.forEach {
+                it.value.adView.resume()
+                //it.value.adUnit.resumeAutoRefresh()
+                Log.i("vuukle_ads_log", "onResume")
+            }
+        } catch (e: Throwable) {
+            // TODO
+            e.printStackTrace()
         }
     }
 
-    override fun pause() {
-        ads.forEach {
-            it.value.adView.pause()
+    /**
+     *  todo
+     */
+    private fun handlePause() {
+        try {
+            ads.forEach {
+                it.value.adView.pause()
+                //it.value.adUnit.stopAutoRefresh()
+                Log.i("vuukle_ads_log", "onPause")
+            }
+        } catch (e: Throwable) {
+            //TODO
+            e.printStackTrace()
         }
     }
 
-    override fun destroy() {
-        ads.forEach {
-            it.value.adView.destroy()
+    /**
+     *  todo
+     */
+    private fun handleDestroy() {
+        try {
+            ads.forEach {
+                it.value.adView.destroy()
+                //it.value.adUnit.stopAutoRefresh()
+            }
+        } catch (e: Throwable) {
+            //TODO
+            e.printStackTrace()
         }
     }
 
+    /**
+     *  todo
+     */
     override fun addErrorListener(vuukleAdsErrorCallback: VuukleAdsErrorCallback) {
         this.vuukleAdsErrorCallback = vuukleAdsErrorCallback
     }
 
+    /**
+     *  todo
+     */
     override fun addResultListener(vuukleAdsResultCallback: VuukleAdsResultCallback) {
         this.vuukleAdsResultCallback = vuukleAdsResultCallback
     }
 
+    /**
+     *  todo
+     */
     override fun createBanner(adView: VuukleAdView): Result<String> {
         val adId = UUID.randomUUID().toString()
         val bannerAdUnit = prebidWrapper.createBannerAdUnit(

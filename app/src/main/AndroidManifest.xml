@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -26,6 +29,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".view.activity.BannerActivity"
+            android:exported="true"/>
+        <activity android:name=".view.activity.FluidActivity"
+            android:exported="true"/>
+        <activity android:name=".view.activity.FullBannerActivity"
+            android:exported="true"/>
+        <activity android:name=".view.activity.LargeBannerActivity"
+            android:exported="true"/>
+        <activity android:name=".view.activity.MediumRectangleActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>

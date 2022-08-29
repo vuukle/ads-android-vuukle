@@ -1,8 +1,10 @@
-package com.vuukle.ads
+package com.vuukle.ads.view.activity
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.vuukle.ads.R
+import com.vuukle.ads.constants.AdsConstants
 import vuukle.sdk.ads.callback.VuukleAdsErrorCallback
 import vuukle.sdk.ads.callback.VuukleAdsResultCallback
 import vuukle.sdk.ads.exception.VuukleAdsException
@@ -11,7 +13,7 @@ import vuukle.sdk.ads.manager.impl.VuukleAdsImpl
 import vuukle.sdk.ads.model.VuukleAdSize
 import vuukle.sdk.ads.widget.VuukleAdView
 
-class HomeActivity : AppCompatActivity() {
+class BannerActivity : AppCompatActivity() {
 
     private val vuukleAds: VuukleAds = VuukleAdsImpl()
 
@@ -20,7 +22,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_banner)
         initAds()
     }
 
@@ -29,16 +31,16 @@ class HomeActivity : AppCompatActivity() {
         vuukleAds.initialize(this)
         // Create Top banners
         vuukleAdViewTop.setAdSize(VuukleAdSize.Type.BANNER)
-        vuukleAdViewTop.setAdUnitId(AdsConstants.HomePage.BANNER_1_AD_UNIT_ID)
+        vuukleAdViewTop.setAdUnitId(AdsConstants.HomePage.BANNER_AD_UNIT_ID_1)
         vuukleAds.createBanner(vuukleAdViewTop)
         // Create Bottom banners
         vuukleAdViewBottom.setAdSize(VuukleAdSize.Type.BANNER)
-        vuukleAdViewBottom.setAdUnitId(AdsConstants.HomePage.BANNER_2_AD_UNIT_ID)
+        vuukleAdViewBottom.setAdUnitId(AdsConstants.HomePage.BANNER_AD_UNIT_ID_2)
         vuukleAds.createBanner(vuukleAdViewBottom)
         // Observing Ads results
         vuukleAds.addResultListener(object : VuukleAdsResultCallback {
             override fun onDemandFetched(id: String) {
-                Toast.makeText(this@HomeActivity, id, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@BannerActivity, id, Toast.LENGTH_SHORT).show()
             }
         })
         // Handling errors
@@ -49,20 +51,5 @@ class HomeActivity : AppCompatActivity() {
         })
         // start advertisement
         vuukleAds.startAdvertisement()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        vuukleAds.resume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        vuukleAds.pause()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        vuukleAds.destroy()
     }
 }
