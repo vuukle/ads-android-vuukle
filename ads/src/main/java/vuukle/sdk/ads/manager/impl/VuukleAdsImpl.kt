@@ -71,14 +71,14 @@ class VuukleAdsImpl : VuukleAds {
 
     override fun initialize(
         applicationContext: Context
-    ): Result<Boolean> {
+    ): Boolean{
         if (applicationContext !is AppCompatActivity) {
             throw VuukleAdsInitializationException("We are supporting only Activity for now. Please call `initialize()` function from Activity.")
         }
         doInitialize(applicationContext)
         configureAds(applicationContext)
         (applicationContext as LifecycleOwner).lifecycle.addObserver(lifecycleObserver)
-        return Result.success(true)
+        return true
     }
 
     /**
@@ -203,7 +203,7 @@ class VuukleAdsImpl : VuukleAds {
     /**
      *  todo
      */
-    override fun createBanner(adView: VuukleAdView): Result<String> {
+    override fun createBanner(adView: VuukleAdView): String {
         val adId = UUID.randomUUID().toString()
         val bannerAdUnit = prebidWrapper.createBannerAdUnit(
             provider.getAdsConfigurationId(),
@@ -212,6 +212,6 @@ class VuukleAdsImpl : VuukleAds {
         )
         ads[adId] = AdItem(adView.getAdView() as AdView, bannerAdUnit)
         Log.i("vuukle_ads_log", "Banner is created: $adId")
-        return Result.success(adId)
+        return adId
     }
 }

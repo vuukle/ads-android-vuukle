@@ -7,9 +7,9 @@ import vuukle.sdk.ads.callback.VuukleAdsResultCallback
 import vuukle.sdk.ads.widget.VuukleAdView
 
 interface VuukleAds {
-    fun initialize(applicationContext: Context): Result<Boolean>
+    fun initialize(applicationContext: Context): Boolean
     fun addErrorListener(vuukleAdsErrorCallback: VuukleAdsErrorCallback)
     fun addResultListener(vuukleAdsResultCallback: VuukleAdsResultCallback)
-    fun createBanner(adView: VuukleAdView): Result<String>
+    fun createBanner(adView: VuukleAdView): String
     fun startAdvertisement()
 }
