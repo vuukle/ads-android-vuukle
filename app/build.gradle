@@ -37,7 +37,5 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'com.google.android.gms:play-services-ads:21.0.0'
     implementation 'org.prebid:prebid-mobile-sdk:[1,2)'
-    // Load Vuukle ads sdk
-    //implementation files('libs/vuukle-ads-sdk.1.1.0.aar')
     implementation project(":ads")
 }
