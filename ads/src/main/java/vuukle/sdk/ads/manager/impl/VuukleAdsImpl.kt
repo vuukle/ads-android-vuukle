@@ -73,14 +73,14 @@ class VuukleAdsImpl : VuukleAds {
     }
 
     override fun initialize(
-        applicationContext: Context
-    ): Boolean{
-        if (applicationContext !is AppCompatActivity) {
+        context: Context
+    ): Boolean {
+        if (context !is AppCompatActivity) {
             throw VuukleAdsInitializationException("We are supporting only Activity for now. Please call `initialize()` function from Activity.")
         }
-        doInitialize(applicationContext)
-        configureAds(applicationContext)
-        (applicationContext as LifecycleOwner).lifecycle.addObserver(lifecycleObserver)
+        doInitialize(context)
+        configureAds(context)
+        (context as LifecycleOwner).lifecycle.addObserver(lifecycleObserver)
         return true
     }
 
