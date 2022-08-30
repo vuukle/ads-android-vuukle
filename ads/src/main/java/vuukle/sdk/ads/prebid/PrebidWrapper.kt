@@ -1,10 +1,8 @@
 package vuukle.sdk.ads.prebid
 
 import android.content.Context
-import android.util.Log
 import org.prebid.mobile.*
 import vuukle.sdk.ads.constants.SdkConstants
-import vuukle.sdk.ads.provider.VuukleAdsProvider
 
 class PrebidWrapper {
 
@@ -23,7 +21,7 @@ class PrebidWrapper {
         val parameters = BannerBaseAdUnit.Parameters()
         parameters.api = listOf(Signals.Api(6), Signals.Api(5))
         bannerAdUnit.parameters = parameters
-        bannerAdUnit.setAutoRefreshPeriodMillis(30000)
+        bannerAdUnit.setAutoRefreshPeriodMillis(120000)
         return bannerAdUnit
     }
 }
