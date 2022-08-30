@@ -27,7 +27,11 @@ class VuukleAdView(context: Context, attributeSet: AttributeSet) :
         this.addView(googleAdView)
     }
 
-    fun setAdSize(adSize: VuukleAdSize.Type) {
+    fun setAdSize(
+        adSize: VuukleAdSize.Type,
+        width: Int? = null,
+        height: Int? = null
+    ) {
         vuukleAdSize = when (adSize) {
             VuukleAdSize.Type.BANNER -> {
                 VuukleAdSize(
@@ -46,7 +50,9 @@ class VuukleAdView(context: Context, attributeSet: AttributeSet) :
             }
             VuukleAdSize.Type.FLUID -> {
                 VuukleAdSize(
-                    name = VuukleAdSize.Type.FLUID
+                    name = VuukleAdSize.Type.FLUID,
+                    width = width,
+                    height = height
                 )
             }
             VuukleAdSize.Type.LARGE_BANNER -> {
@@ -60,8 +66,7 @@ class VuukleAdView(context: Context, attributeSet: AttributeSet) :
                 )
             }
         }
-
-        googleAdView.setAdSize(vuukleAdSize.name.toAdSize())
+        googleAdView.setAdSize(vuukleAdSize.name.toAdSize(width, height))
     }
 
     fun setAdUnitId(adUnitId: String) {

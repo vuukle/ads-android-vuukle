@@ -3,27 +3,14 @@ package vuukle.sdk.ads.model
 import vuukle.sdk.ads.ext.toAdSize
 
 data class VuukleAdSize(
-    val name: Type
+    val name: Type,
+    val width: Int? = null,
+    val height: Int? = null
 ) {
 
-    fun width(): Int {
-        val adSize = name.toAdSize()
-       return if (adSize.isFluid.not()){
-            adSize.width
-        } else{
-            //TODO should get size from parent view
-            300
-       }
-    }
-    fun height(): Int {
-        val adSize = name.toAdSize()
-        return if (adSize.isFluid.not()){
-            adSize.height
-        } else{
-            //TODO should get size from parent view
-            300
-        }
-    }
+    fun width(): Int = name.toAdSize(width = width, height = height).width
+
+    fun height(): Int = name.toAdSize(width = width, height = height).height
 
     enum class Type {
         INVALID, BANNER, MEDIUM_RECTANGLE, LARGE_BANNER, FULL_BANNER, FLUID

@@ -85,7 +85,8 @@ class VuukleAdsImpl : VuukleAds {
      *  todo
      */
     private fun configureAds(activityContext: Context) {
-        val configuration = RequestConfiguration.Builder().build()
+         val configuration = RequestConfiguration.Builder().build()
+        //val configuration = RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("B8A6F850FDA9B5DEB30F01B2F07971EA")).build()
 
         MobileAds.setRequestConfiguration(configuration)
         // Initialize the Mobile Ads SDK with an AdMob App ID.
@@ -118,8 +119,7 @@ class VuukleAdsImpl : VuukleAds {
      *  todo
      */
     private fun loadAd(id: String, adView: AdView, adUnit: AdUnit) {
-        val builder = AdManagerAdRequest
-            .Builder()
+        val builder = AdManagerAdRequest.Builder()
         adUnit.fetchDemand(builder) {
             if (it != ResultCode.SUCCESS) {
                 Log.i("vuukle_ads_log", "fetchDemand error ${it.name}")
