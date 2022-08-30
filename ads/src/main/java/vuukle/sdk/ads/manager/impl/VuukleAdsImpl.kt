@@ -86,7 +86,6 @@ class VuukleAdsImpl : VuukleAds {
      */
     private fun configureAds(activityContext: Context) {
          val configuration = RequestConfiguration.Builder().build()
-        //val configuration = RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("B8A6F850FDA9B5DEB30F01B2F07971EA")).build()
 
         MobileAds.setRequestConfiguration(configuration)
         // Initialize the Mobile Ads SDK with an AdMob App ID.
