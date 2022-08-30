@@ -21,7 +21,7 @@ class PrebidWrapper {
         val parameters = BannerBaseAdUnit.Parameters()
         parameters.api = listOf(Signals.Api(6), Signals.Api(5))
         bannerAdUnit.parameters = parameters
-        bannerAdUnit.setAutoRefreshPeriodMillis(120000)
+        bannerAdUnit.setAutoRefreshPeriodMillis(30000)
         return bannerAdUnit
     }
 }

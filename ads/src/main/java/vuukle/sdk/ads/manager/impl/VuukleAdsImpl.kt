@@ -17,10 +17,12 @@ import vuukle.sdk.ads.exception.VuukleAdsInitializationException
 import vuukle.sdk.ads.exception.VuukleLoadAdError
 import vuukle.sdk.ads.manager.VuukleAds
 import vuukle.sdk.ads.model.AdItem
+import vuukle.sdk.ads.model.VuukleAdSize
 import vuukle.sdk.ads.prebid.PrebidWrapper
 import vuukle.sdk.ads.provider.VuukleAdsProvider
 import vuukle.sdk.ads.widget.VuukleAdView
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 
 class VuukleAdsImpl : VuukleAds {
 
@@ -29,6 +31,7 @@ class VuukleAdsImpl : VuukleAds {
 
     // Ads structure
     private val ads = TreeMap<String, AdItem>()
+    private val advertiseIsStarted = AtomicBoolean(false)
 
     // Callbacks
     private lateinit var vuukleAdsErrorCallback: VuukleAdsErrorCallback
@@ -107,11 +110,18 @@ class VuukleAdsImpl : VuukleAds {
      *  todo
      */
     override fun startAdvertisement() {
+        advertiseIsStarted.set(true)
         ads.forEach {
             val adView = it.value.adView
             val adUnit = it.value.adUnit
             loadAd(it.key, adView, adUnit)
         }
+    }
+
+    private fun startAdvertisementForFluids(key: String, value: AdItem) {
+        val adView = value.adView
+        val adUnit = value.adUnit
+        loadAd(key, adView, adUnit)
     }
 
     /**
@@ -204,7 +214,33 @@ class VuukleAdsImpl : VuukleAds {
      *  todo
      */
     override fun createBanner(adView: VuukleAdView): String {
+        /**
+         *  todo
+         */
         val adId = UUID.randomUUID().toString()
+
+
+        if (adView.getVuukleAdSize().name == VuukleAdSize.Type.FLUID) {
+            adView.detectFluidSize { fluidVuukleSize ->
+                val bannerAdUnit = prebidWrapper.createBannerAdUnit(
+                    provider.getAdsConfigurationId(),
+                    fluidVuukleSize.width(),
+                    fluidVuukleSize.height()
+                )
+                val adItem = AdItem(adView.getAdView() as AdView, bannerAdUnit)
+                ads[adId] = adItem
+                Log.i("vuukle_ads_log", "Banner is created: $adId")
+                // Checking if advertise is started, we are going to run it
+                if (advertiseIsStarted.get()) {
+                    startAdvertisementForFluids(key = adId, value = adItem)
+                }
+            }
+            return "${VuukleAdSize.Type.FLUID.name} : $adId"
+        }
+
+        /**
+         *  todo
+         */
         val bannerAdUnit = prebidWrapper.createBannerAdUnit(
             provider.getAdsConfigurationId(),
             adView.getVuukleAdSize().width(),

@@ -2,9 +2,12 @@ package vuukle.sdk.ads.widget
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
+import vuukle.sdk.ads.ext.pxToDp
 import vuukle.sdk.ads.ext.toAdSize
 import vuukle.sdk.ads.model.VuukleAdSize
 
@@ -27,11 +30,24 @@ class VuukleAdView(context: Context, attributeSet: AttributeSet) :
         this.addView(googleAdView)
     }
 
+    fun detectFluidSize(onSizeAvailable: (VuukleAdSize) -> Unit) {
+        this.post {
+            vuukleAdSize = VuukleAdSize(VuukleAdSize.Type.FLUID)
+            val widthDp = width.pxToDp(this.context)
+            val heightDp = height.pxToDp(this.context)
+            vuukleAdSize.addFluidSize(widthDp, heightDp)
+            googleAdView.setAdSize(AdSize(vuukleAdSize.width(), vuukleAdSize.height()))
+            onSizeAvailable.invoke(vuukleAdSize)
+        }
+    }
+
+    /**
+     * TODO
+     */
     fun setAdSize(
-        adSize: VuukleAdSize.Type,
-        width: Int? = null,
-        height: Int? = null
+        adSize: VuukleAdSize.Type
     ) {
+
         vuukleAdSize = when (adSize) {
             VuukleAdSize.Type.BANNER -> {
                 VuukleAdSize(
@@ -51,8 +67,6 @@ class VuukleAdView(context: Context, attributeSet: AttributeSet) :
             VuukleAdSize.Type.FLUID -> {
                 VuukleAdSize(
                     name = VuukleAdSize.Type.FLUID,
-                    width = width,
-                    height = height
                 )
             }
             VuukleAdSize.Type.LARGE_BANNER -> {
@@ -66,7 +80,9 @@ class VuukleAdView(context: Context, attributeSet: AttributeSet) :
                 )
             }
         }
-        googleAdView.setAdSize(vuukleAdSize.name.toAdSize(width, height))
+        if (adSize != VuukleAdSize.Type.FLUID) {
+            googleAdView.setAdSize(vuukleAdSize.name.toAdSize())
+        }
     }
 
     fun setAdUnitId(adUnitId: String) {

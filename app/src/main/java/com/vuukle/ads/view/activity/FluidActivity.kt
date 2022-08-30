@@ -32,23 +32,16 @@ class FluidActivity : AppCompatActivity() {
     }
 
     private fun initAds() {
+        // Initialize Vuukle Ads
+        vuukleAds.initialize(this)
         // Create Top banners
-        vuukleAdViewTop.post {
-            vuukleAdViewTop.setAdSize(
-                VuukleAdSize.Type.FLUID,
-                pxToDp(this, vuukleAdViewTop.width),
-                pxToDp(this, vuukleAdViewTop.height)
-            )
-        }
+        vuukleAdViewTop.setAdSize(VuukleAdSize.Type.FLUID)
+        vuukleAdViewTop.setAdUnitId(AdsConstants.HomePage.FLUID_AD_UNIT_ID_1)
+        vuukleAds.createBanner(vuukleAdViewTop)
         // Create Bottom banners
-        vuukleAdViewBottom.post {
-            vuukleAdViewBottom.setAdSize(
-                VuukleAdSize.Type.FLUID,
-                pxToDp(this, vuukleAdViewBottom.width),
-                pxToDp(this, vuukleAdViewBottom.height)
-            )
-            loadContent()
-        }
+        vuukleAdViewBottom.setAdSize(VuukleAdSize.Type.FLUID)
+        vuukleAdViewBottom.setAdUnitId(AdsConstants.HomePage.FLUID_AD_UNIT_ID_2)
+        vuukleAds.createBanner(vuukleAdViewBottom)
         // Observing Ads results
         vuukleAds.addResultListener(object : VuukleAdsResultCallback {
             override fun onDemandFetched(id: String) {
@@ -61,25 +54,7 @@ class FluidActivity : AppCompatActivity() {
                 Log.i("ewfwefwe--->>", error.toString())
             }
         })
-    }
-
-    private fun loadContent() {
-        // Initialize Vuukle Ads
-        vuukleAds.initialize(this)
-
-        vuukleAdViewTop.setAdUnitId(AdsConstants.HomePage.FLUID_AD_UNIT_ID_1)
-        vuukleAds.createBanner(vuukleAdViewTop)
-
-        vuukleAdViewBottom.setAdUnitId(AdsConstants.HomePage.FLUID_AD_UNIT_ID_2)
-        vuukleAds.createBanner(vuukleAdViewBottom)
-
         // start advertisement
         vuukleAds.startAdvertisement()
-    }
-
-    fun pxToDp(context: Context, px: Int): Int {
-        val metrics: DisplayMetrics = Resources.getSystem().displayMetrics
-        val dp = px / (metrics.densityDpi / 160f)
-        return dp.roundToInt()
     }
 }
