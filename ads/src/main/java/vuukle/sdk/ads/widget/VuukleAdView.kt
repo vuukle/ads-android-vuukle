@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
+import vuukle.sdk.ads.constants.LoggerConstants
 import vuukle.sdk.ads.ext.pxToDp
 import vuukle.sdk.ads.ext.toAdSize
 import vuukle.sdk.ads.model.VuukleAdSize
@@ -47,7 +48,6 @@ class VuukleAdView(context: Context, attributeSet: AttributeSet) :
     fun setAdSize(
         adSize: VuukleAdSize.Type
     ) {
-
         vuukleAdSize = when (adSize) {
             VuukleAdSize.Type.BANNER -> {
                 VuukleAdSize(
@@ -83,9 +83,11 @@ class VuukleAdView(context: Context, attributeSet: AttributeSet) :
         if (adSize != VuukleAdSize.Type.FLUID) {
             googleAdView.setAdSize(vuukleAdSize.name.toAdSize())
         }
+        Log.i(LoggerConstants.VUUKLE_ADS_LOG, "VuukleAdSize = $adSize")
     }
 
     fun setAdUnitId(adUnitId: String) {
         googleAdView.adUnitId = adUnitId
+        Log.i(LoggerConstants.VUUKLE_ADS_LOG, "Ad Unit Id = $adUnitId")
     }
 }

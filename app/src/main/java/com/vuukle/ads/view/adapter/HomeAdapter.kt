@@ -26,6 +26,7 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
             HomeModel("FULL BANNER", VuukleAdSize.Type.FULL_BANNER),
             HomeModel("FLUID", VuukleAdSize.Type.FLUID),
             HomeModel("BANNER", VuukleAdSize.Type.BANNER),
+            HomeModel("VUUKLE ADS ACTIVITY", VuukleAdSize.Type.INVALID),
         )
         notifyDataSetChanged()
     }

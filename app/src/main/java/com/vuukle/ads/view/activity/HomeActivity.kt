@@ -1,11 +1,12 @@
-package com.vuukle.ads
+package com.vuukle.ads.view.activity
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.vuukle.ads.view.activity.*
+import com.vuukle.ads.R
+import com.vuukle.ads.view.activity.ads.*
 import com.vuukle.ads.view.adapter.HomeAdapter
 import vuukle.sdk.ads.model.VuukleAdSize
 
@@ -49,6 +50,9 @@ class HomeActivity : AppCompatActivity() {
             }
             VuukleAdSize.Type.FLUID -> {
                 startActivity(Intent(this, FluidActivity::class.java))
+            }
+            VuukleAdSize.Type.INVALID -> {
+                startActivity(Intent(this, VuukleAdsActivity::class.java))
             }
             else -> Unit
         }

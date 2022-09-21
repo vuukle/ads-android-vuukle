@@ -1,4 +1,4 @@
-package com.vuukle.ads.view.activity
+package com.vuukle.ads.view.activity.ads
 
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +8,7 @@ import com.vuukle.ads.R
 import com.vuukle.ads.constants.AdsConstants
 import vuukle.sdk.ads.callback.VuukleAdsErrorCallback
 import vuukle.sdk.ads.callback.VuukleAdsResultCallback
+import vuukle.sdk.ads.constants.LoggerConstants
 import vuukle.sdk.ads.exception.VuukleAdsException
 import vuukle.sdk.ads.manager.VuukleAds
 import vuukle.sdk.ads.manager.impl.VuukleAdsImpl
@@ -47,8 +48,7 @@ class FullBannerActivity : AppCompatActivity() {
         // Handling errors
         vuukleAds.addErrorListener(object : VuukleAdsErrorCallback {
             override fun onError(error: VuukleAdsException) {
-                Log.i("ewfwefwe--->>", error.toString())
-
+                Log.i(LoggerConstants.VUUKLE_ADS_LOG, error.toString())
             }
         })
         // start advertisement

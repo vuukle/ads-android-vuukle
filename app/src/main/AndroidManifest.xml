@@ -21,7 +21,7 @@
             android:value="ca-app-pub-7538703090817389~3161178947" />
 
         <activity
-            android:name=".HomeActivity"
+            android:name=".view.activity.HomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,15 +30,17 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.activity.BannerActivity"
+        <activity android:name=".view.activity.ads.BannerActivity"
             android:exported="true"/>
-        <activity android:name=".view.activity.FluidActivity"
+        <activity android:name=".view.activity.ads.FluidActivity"
             android:exported="true"/>
-        <activity android:name=".view.activity.FullBannerActivity"
+        <activity android:name=".view.activity.ads.FullBannerActivity"
             android:exported="true"/>
-        <activity android:name=".view.activity.LargeBannerActivity"
+        <activity android:name=".view.activity.ads.LargeBannerActivity"
             android:exported="true"/>
-        <activity android:name=".view.activity.MediumRectangleActivity"
+        <activity android:name=".view.activity.ads.MediumRectangleActivity"
+            android:exported="true"/>
+        <activity android:name=".view.activity.VuukleAdsActivity"
             android:exported="true"/>
     </application>
 
