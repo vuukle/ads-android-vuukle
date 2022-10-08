@@ -16,6 +16,7 @@ import vuukle.sdk.ads.exception.VuukleAdLoadFail
 import vuukle.sdk.ads.exception.VuukleAdsException
 import vuukle.sdk.ads.exception.VuukleAdsInitializationException
 import vuukle.sdk.ads.exception.VuukleLoadAdError
+import vuukle.sdk.ads.ext.vuukleLog
 import vuukle.sdk.ads.manager.VuukleAds
 import vuukle.sdk.ads.model.AdItem
 import vuukle.sdk.ads.model.VuukleAdSize
@@ -26,6 +27,10 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 class VuukleAdsImpl : VuukleAds {
+
+    companion object {
+        const val TAG = "VuukleAdsImpl"
+    }
 
     private lateinit var provider: VuukleAdsProvider
     private lateinit var prebidWrapper: PrebidWrapper
@@ -43,7 +48,6 @@ class VuukleAdsImpl : VuukleAds {
         override fun onResume(owner: LifecycleOwner) {
             handleResume()
             super.onResume(owner)
-            Log.i(LoggerConstants.VUUKLE_ADS_LOG, "MEMORY LEAK STEP ... ${ads.size}")
         }
 
         override fun onPause(owner: LifecycleOwner) {
@@ -63,6 +67,7 @@ class VuukleAdsImpl : VuukleAds {
         override fun onAdFailedToLoad(loadError: LoadAdError) {
             super.onAdFailedToLoad(loadError)
             val errorString = loadError.toString()
+            vuukleLog(TAG, "onAdFailedToLoad: $errorString")
             notifyError(VuukleLoadAdError(errorString))
         }
     }
@@ -76,8 +81,9 @@ class VuukleAdsImpl : VuukleAds {
     override fun initialize(
         context: Context
     ): Boolean {
+        VuukleLogger.init(context.applicationContext)
         if (context !is AppCompatActivity) {
-            Log.i(LoggerConstants.VUUKLE_ADS_LOG,"Context is not AppCompatActivity")
+            vuukleLog(TAG, "initialize: Context is not AppCompatActivity")
             throw VuukleAdsInitializationException("We are supporting only Activity for now. Please call `initialize()` function from Activity.")
         }
         doInitialize(context)
@@ -91,7 +97,6 @@ class VuukleAdsImpl : VuukleAds {
      */
     private fun configureAds(activityContext: Context) {
          val configuration = RequestConfiguration.Builder().setTestDeviceIds(listOf("B8A6F850FDA9B5DEB30F01B2F07971EA")).build()
-
         MobileAds.setRequestConfiguration(configuration)
         // Initialize the Mobile Ads SDK with an AdMob App ID.
         MobileAds.initialize(activityContext) {
@@ -133,7 +138,7 @@ class VuukleAdsImpl : VuukleAds {
         val builder = AdManagerAdRequest.Builder()
         adUnit.fetchDemand(builder) {
             if (it != ResultCode.SUCCESS) {
-                Log.i(LoggerConstants.VUUKLE_ADS_LOG, "fetchDemand error ${it.name}")
+                vuukleLog(TAG, "loadAd: $it")
                 notifyError(VuukleAdLoadFail(it.toString()))
             } else {
                 val request = builder.build()
@@ -159,8 +164,7 @@ class VuukleAdsImpl : VuukleAds {
                 Log.i(LoggerConstants.VUUKLE_ADS_LOG, "onResume")
             }
         } catch (e: Throwable) {
-            // TODO
-            e.printStackTrace()
+            vuukleLog(TAG, "handleResume:", e)
         }
     }
 
@@ -175,8 +179,7 @@ class VuukleAdsImpl : VuukleAds {
                 Log.i(LoggerConstants.VUUKLE_ADS_LOG, "onPause")
             }
         } catch (e: Throwable) {
-            //TODO
-            e.printStackTrace()
+            vuukleLog(TAG, "handlePause:", e)
         }
     }
 
@@ -191,8 +194,7 @@ class VuukleAdsImpl : VuukleAds {
                 Log.i(LoggerConstants.VUUKLE_ADS_LOG, "destroy")
             }
         } catch (e: Throwable) {
-            //TODO
-            e.printStackTrace()
+            vuukleLog(TAG, "handleDestroy:", e)
         } finally {
             adListener = null
         }
@@ -220,8 +222,6 @@ class VuukleAdsImpl : VuukleAds {
          *  todo
          */
         val adId = UUID.randomUUID().toString()
-
-
         if (adView.getVuukleAdSize().name == VuukleAdSize.Type.FLUID) {
             adView.detectFluidSize { fluidVuukleSize ->
                 val bannerAdUnit = prebidWrapper.createBannerAdUnit(

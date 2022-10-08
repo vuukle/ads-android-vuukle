@@ -42,13 +42,13 @@ class BannerActivity : AppCompatActivity() {
         // Observing Ads results
         vuukleAds.addResultListener(object : VuukleAdsResultCallback {
             override fun onDemandFetched(id: String) {
-                Toast.makeText(this@BannerActivity, id, Toast.LENGTH_SHORT).show()
+                // handle demand
             }
         })
         // Handling errors
         vuukleAds.addErrorListener(object : VuukleAdsErrorCallback {
             override fun onError(error: VuukleAdsException) {
-                Log.i(LoggerConstants.VUUKLE_ADS_LOG, "VuukleAdsException = $error")
+                // handle error
             }
         })
         // start advertisement

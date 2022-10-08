@@ -6,14 +6,14 @@ import vuukle.sdk.ads.constants.SdkConstants
 
 class PrebidWrapper {
 
-    fun initializeHost(applicationContext: Context) {
+    fun initializeHost(activityContext: Context) {
         // Get Ad from prebid
         Host.CUSTOM.hostUrl = SdkConstants.HOST_URL
         PrebidMobile.setPrebidServerHost(Host.CUSTOM)
         PrebidMobile.setPrebidServerAccountId(SdkConstants.PREBID_SERVER_ACCOUNT_ID)
         PrebidMobile.setPbsDebug(true)
         PrebidMobile.setShareGeoLocation(true)
-        PrebidMobile.setApplicationContext(applicationContext)
+        PrebidMobile.setApplicationContext(activityContext)
     }
 
     fun createBannerAdUnit(configId: String, width: Int, height: Int): BannerAdUnit {
