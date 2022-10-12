@@ -12,6 +12,7 @@ import vuukle.sdk.ads.constants.LoggerConstants
 import vuukle.sdk.ads.exception.VuukleAdsException
 import vuukle.sdk.ads.manager.VuukleAds
 import vuukle.sdk.ads.manager.impl.VuukleAdsImpl
+import vuukle.sdk.ads.manager.impl.VuukleLogger
 import vuukle.sdk.ads.model.VuukleAdSize
 import vuukle.sdk.ads.widget.VuukleAdView
 

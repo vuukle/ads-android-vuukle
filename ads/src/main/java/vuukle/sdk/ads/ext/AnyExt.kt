@@ -8,14 +8,14 @@ import java.util.*
 fun Any.vuukleLog(tag: String, value: String? = null) {
     try {
         val currentThreadName = Thread.currentThread().name
-        val logMessage = "$currentThreadName ".plus(
-            "${Date(System.currentTimeMillis())} "
+        val logMessage = "$currentThreadName: ".plus(
+            "${Date(System.currentTimeMillis())}: "
         ).plus(
-            "$tag "
+            "$tag: "
         ).plus(
-            "$value "
+            "$value: "
         ).plus(
-            ":${UUID.randomUUID()} "
+            "${UUID.randomUUID()} "
         )
         VuukleLogger.getInstance()?.writeLog(logMessage)
         Log.i(LoggerConstants.VUUKLE_ADS_LOG, logMessage)

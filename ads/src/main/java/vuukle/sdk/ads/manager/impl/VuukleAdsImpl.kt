@@ -86,6 +86,8 @@ class VuukleAdsImpl : VuukleAds {
             vuukleLog(TAG, "initialize: Context is not AppCompatActivity")
             throw VuukleAdsInitializationException("We are supporting only Activity for now. Please call `initialize()` function from Activity.")
         }
+        Log.i(LoggerConstants.VUUKLE_ADS_LOG,"VuukleAdsImpl initialize: success")
+        vuukleLog(TAG, "initialize: success")
         doInitialize(context)
         configureAds(context)
         (context as LifecycleOwner).lifecycle.addObserver(lifecycleObserver)
@@ -196,6 +198,7 @@ class VuukleAdsImpl : VuukleAds {
         } catch (e: Throwable) {
             vuukleLog(TAG, "handleDestroy:", e)
         } finally {
+            VuukleLogger.getInstance()?.sendLogRequest()
             adListener = null
         }
     }
