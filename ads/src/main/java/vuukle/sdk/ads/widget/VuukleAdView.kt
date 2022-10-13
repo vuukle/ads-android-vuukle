@@ -10,10 +10,15 @@ import com.google.android.gms.ads.AdView
 import vuukle.sdk.ads.constants.LoggerConstants
 import vuukle.sdk.ads.ext.pxToDp
 import vuukle.sdk.ads.ext.toAdSize
+import vuukle.sdk.ads.ext.vuukleLog
 import vuukle.sdk.ads.model.VuukleAdSize
 
 class VuukleAdView(context: Context, attributeSet: AttributeSet) :
     RelativeLayout(context, attributeSet) {
+
+    companion object {
+        const val TAG = "VuukleAdView"
+    }
 
     private var googleAdView: AdView
     private lateinit var vuukleAdSize: VuukleAdSize
@@ -83,11 +88,13 @@ class VuukleAdView(context: Context, attributeSet: AttributeSet) :
         if (adSize != VuukleAdSize.Type.FLUID) {
             googleAdView.setAdSize(vuukleAdSize.name.toAdSize())
         }
+        vuukleLog(TAG, "setAdSize: $vuukleAdSize")
         Log.i(LoggerConstants.VUUKLE_ADS_LOG, "VuukleAdSize = $adSize")
     }
 
     fun setAdUnitId(adUnitId: String) {
         googleAdView.adUnitId = adUnitId
         Log.i(LoggerConstants.VUUKLE_ADS_LOG, "Ad Unit Id = $adUnitId")
+        vuukleLog(TAG, "setAdUnitId: $adUnitId")
     }
 }

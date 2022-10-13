@@ -102,7 +102,7 @@ class VuukleAdsImpl : VuukleAds {
         MobileAds.setRequestConfiguration(configuration)
         // Initialize the Mobile Ads SDK with an AdMob App ID.
         MobileAds.initialize(activityContext) {
-            // TODO logging
+            vuukleLog(TAG, "MobileAds initialize: success")
         }
         prebidWrapper.initializeHost(activityContext)
     }
@@ -113,6 +113,7 @@ class VuukleAdsImpl : VuukleAds {
     private fun doInitialize(activityContext: Context) {
         provider = VuukleAdsProvider(activityContext)
         prebidWrapper = PrebidWrapper()
+        vuukleLog(TAG, "prebid initialize: success")
     }
 
     /**
@@ -240,6 +241,7 @@ class VuukleAdsImpl : VuukleAds {
                     startAdvertisementForFluids(key = adId, value = adItem)
                 }
             }
+            vuukleLog(TAG, "createBanner: $adId")
             return "${VuukleAdSize.Type.FLUID.name} : $adId"
         }
 
@@ -253,6 +255,7 @@ class VuukleAdsImpl : VuukleAds {
         )
         ads[adId] = AdItem(adView.getAdView() as AdView, bannerAdUnit)
         Log.i(LoggerConstants.VUUKLE_ADS_LOG, "Banner is created: $adId")
+        vuukleLog(TAG, "banner is created: $adId")
         return adId
     }
 }
